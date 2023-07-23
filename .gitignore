@@ -1,9 +1,12 @@
-# compiled output
+# Compiled output
 /dist
 /node_modules
 
-# database
+# Database
 postgresql/
+
+# Enviroments
+.env
 
 # Logs
 logs
