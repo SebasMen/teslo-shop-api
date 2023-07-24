@@ -6,7 +6,7 @@
 postgresql/
 
 # Enviroments
-.env
+/.env
 
 # Logs
 logs
