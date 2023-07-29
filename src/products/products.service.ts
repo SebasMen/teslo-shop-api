@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { validate as isUUID } from 'uuid';
 
 import { CreateProductDto } from './dto/create-product.dto';
@@ -25,6 +25,9 @@ export class ProductsService {
 
     @InjectRepository(ProductImage)
     private readonly productsImageRepository: Repository<ProductImage>,
+
+    @InjectRepository(ProductImage)
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
@@ -95,15 +98,19 @@ export class ProductsService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
+    const { images, ...restProduct } = updateProductDto;
+
     const product = await this.productsRepository.preload({
       id,
-      ...updateProductDto,
-      images: [],
+      ...restProduct,
     });
 
     if (!product) {
       throw new NotFoundException(`Product with id ${id} not found`);
     }
+
+    // Create Query Runner
+    const queryRunner = this.dataSource.createQueryRunner();
 
     try {
       await this.productsRepository.save(product);
