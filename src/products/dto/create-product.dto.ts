@@ -16,7 +16,7 @@ export class CreateProductDto {
 
   @IsNumber()
   @IsPositive()
-  @IsPositive()
+  @IsOptional()
   price?: number;
 
   @IsString()
